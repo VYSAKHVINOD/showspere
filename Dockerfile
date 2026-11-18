@@ -22,3 +22,4 @@ EXPOSE 8080
 
 # Run server
 CMD ["python", "server.py"]
+
