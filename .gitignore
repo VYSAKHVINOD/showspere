@@ -20,4 +20,5 @@ venv/
 .vscode/
 .idea/
 *.log
+push_to_github.bat
 
