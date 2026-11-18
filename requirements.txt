@@ -1,0 +1,2 @@
+# No external pip dependencies required.
+# ShowSphere runs 100% on Python 3 Standard Library (http.server, sqlite3, json).

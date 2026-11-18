@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShowSphere - Book Movie & Event Tickets Online</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎟️</text></svg>">
+</head>
+<body>
+
+  <!-- ========================================================================
+       Top Navigation Bar
+       ======================================================================== -->
+  <header class="navbar">
+    <div class="nav-container">
+      <!-- Brand Logo -->
+      <a href="#" class="nav-brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zm-5-7c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3z"/>
+          </svg>
+        </div>
+        <div class="brand-text">Show<span>Sphere</span></div>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="nav-search">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search for Movies, Concerts, Standup Comedy, Sports..." autocomplete="off">
+      </div>
+
+      <!-- Nav Actions (City, Bookings, Admin) -->
+      <div class="nav-actions">
+        <div class="city-selector">
+          <span>📍</span>
+          <select id="citySelect">
+            <option value="All">All Cities</option>
+          </select>
+        </div>
+
+        <button class="btn-bookings" id="btnMyBookings">
+          <span>🎟️ My Bookings</span>
+          <span class="bookings-badge" id="navBookingsCount">0</span>
+        </button>
+
+        <button class="btn-admin" id="btnAddEvent">
+          + Add Event
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       Category Navigation Pills
+       ======================================================================== -->
+  <nav class="subnav">
+    <div class="subnav-container">
+      <ul class="category-pills">
+        <li class="pill-item active" data-category="All">All Events</li>
+        <li class="pill-item" data-category="Movies">Movies</li>
+        <li class="pill-item" data-category="Concerts">Music Concerts</li>
+        <li class="pill-item" data-category="Comedy">Standup Comedy</li>
+        <li class="pill-item" data-category="Sports">Live Sports</li>
+        <li class="pill-item" data-category="Plays">Plays & Theater</li>
+      </ul>
+      <div class="quick-links">
+        <span>⚡ Instant M-Ticket</span>
+        <span>🛡️ 100% Safe Checkout</span>
+        <span>🍿 Free F&B Vouchers</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       Featured Hero Showcase
+       ======================================================================== -->
+  <section class="hero-banner">
+    <div class="hero-card" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80');">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-badge-tag">🔥 Trending Blockbuster</div>
+        <h1 class="hero-title">Coldplay: Music of the Spheres World Tour</h1>
+        <div class="hero-meta">
+          <span class="rating">★ 9.8/10</span>
+          <span>• 280K+ Interested</span>
+          <span>• Stadium Rock & Pop</span>
+          <span>• English</span>
+          <span>• 3h 15m</span>
+        </div>
+        <p class="hero-desc">
+          Experience the most breathtaking stadium show on the planet with LED wristbands, pyrotechnics, and iconic anthems like 'Fix You', 'Yellow', and 'Viva La Vida'.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="openEventDetailsModal(2)">
+            Book Tickets Now
+          </button>
+          <button class="btn-secondary" onclick="openEventDetailsModal(2)">
+            View Tour Venues
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       Main Event Cards Grid
+       ======================================================================== -->
+  <main class="main-container">
+    <div class="section-header">
+      <div class="section-title-wrap">
+        <h2 class="section-title">Recommended Events</h2>
+        <span class="section-count" id="eventsCountLabel">(Loading...)</span>
+      </div>
+    </div>
+
+    <div class="events-grid" id="eventsGrid">
+      <!-- Dynamic Event Cards rendered by app.js -->
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       MODAL 1: Event Details & Shows Selection
+       ======================================================================== -->
+  <div class="modal-overlay" id="eventDetailsModal">
+    <div class="modal-box">
+      <button class="modal-close-btn" data-close-modal>&times;</button>
+      
+      <div class="modal-event-hero" id="modalEventHero">
+        <div class="modal-event-hero-content">
+          <img class="modal-poster-thumb" id="modalPosterThumb" src="" alt="Poster">
+          <div class="modal-hero-text">
+            <h2 id="modalHeroTitle">Event Title</h2>
+            <p class="modal-hero-tags" id="modalHeroTags"></p>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 18px 24px 0;">
+        <p id="modalEventDesc" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;"></p>
+        <p id="modalEventCast" style="font-size: 12px; color: var(--text-muted);"></p>
+      </div>
+
+      <!-- Date Ribbon -->
+      <div class="date-selector-ribbon" id="dateRibbon">
+        <!-- Date pills injected dynamically -->
+      </div>
+
+      <!-- Theaters & Showtimes -->
+      <div class="shows-section" id="showsContainer">
+        <!-- Venues & Showtimes injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: Interactive Seat Selection Map
+       ======================================================================== -->
+  <div class="modal-overlay seatmap-modal" id="seatmapModal">
+    <div class="modal-box">
+      <button class="modal-close-btn" data-close-modal>&times;</button>
+
+      <div class="seatmap-header">
+        <div class="seatmap-event-info">
+          <h3 id="seatmapEventTitle">Event Title</h3>
+          <p id="seatmapVenueDetails">Venue Name | Date & Time</p>
+        </div>
+      </div>
+
+      <!-- Curved Projection Screen -->
+      <div class="screen-visual-container">
+        <div class="curved-screen"></div>
+        <div class="screen-beam"></div>
+        <div class="screen-label">Cinema Screen This Way</div>
+      </div>
+
+      <!-- Seat Legend -->
+      <div class="seat-legend">
+        <div class="legend-item">
+          <div class="legend-dot avail"></div>
+          <span>Available</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot selected"></div>
+          <span>Selected</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot sold"></div>
+          <span>Sold / Booked</span>
+        </div>
+      </div>
+
+      <!-- Seat Tiers (VIP, Platinum, Gold) -->
+      <div class="seat-layout-scroll" id="seatTiersContainer">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Floating Bottom Summary Bar -->
+      <div class="seatmap-bottom-bar">
+        <div>
+          <div class="summary-seats-text" id="summarySeats">No seats selected</div>
+          <div class="summary-price-text" id="summaryPrice">₹0</div>
+        </div>
+        <button class="btn-primary" id="btnProceedToSnacks" onclick="openSnacksModal()" disabled>
+          Proceed to F&B Combos &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: Food & Beverage Combos
+       ======================================================================== -->
+  <div class="modal-overlay" id="snacksModal">
+    <div class="modal-box" style="max-width: 700px;">
+      <button class="modal-close-btn" data-close-modal>&times;</button>
+      <div style="padding: 24px; border-bottom: 1px solid var(--border-color);">
+        <h3 style="font-size: 20px; font-weight: 800;">Grab a Bite! 🍿</h3>
+        <p style="font-size: 13px; color: var(--text-secondary);">Pre-order snacks and get up to 25% off on theater prices!</p>
+      </div>
+
+      <div class="snacks-grid" id="snacksGrid">
+        <!-- Snacks cards injected dynamically -->
+      </div>
+
+      <div style="padding: 18px 24px; background: var(--bg-card); display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-color);">
+        <button class="btn-secondary" onclick="proceedToCheckout()">
+          Skip for Now
+        </button>
+        <button class="btn-primary" onclick="proceedToCheckout()">
+          Continue to Payment &rarr;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 4: Checkout & Simulated Payment
+       ======================================================================== -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-box" style="max-width: 860px;">
+      <button class="modal-close-btn" data-close-modal>&times;</button>
+      <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-color);">
+        <h3 style="font-size: 20px; font-weight: 800;">Order Review & Checkout</h3>
+      </div>
+
+      <div class="checkout-container">
+        <!-- Form Side -->
+        <div>
+          <form id="checkoutForm">
+            <h4 class="checkout-section-title">1. Contact Information</h4>
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" class="form-input" id="userNameInput" placeholder="e.g. Vysakh Nair" required value="Vysakh">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" class="form-input" id="userEmailInput" placeholder="e.g. vysakh@example.com" value="vysakh@example.com">
+              </div>
+              <div class="form-group">
+                <label>Mobile Number *</label>
+                <input type="tel" class="form-input" id="userPhoneInput" placeholder="e.g. 9876543210" required value="9876543210">
+              </div>
+            </div>
+
+            <h4 class="checkout-section-title" style="margin-top: 20px;">2. Select Payment Method</h4>
+            <input type="hidden" id="paymentMethodInput" value="UPI">
+            <div class="payment-tabs">
+              <div class="payment-tab-btn active" data-method="UPI">⚡ UPI / QR</div>
+              <div class="payment-tab-btn" data-method="Card">💳 Credit / Debit Card</div>
+              <div class="payment-tab-btn" data-method="NetBanking">🏦 Net Banking</div>
+            </div>
+
+            <div id="payPanel_UPI" class="payment-method-panel" style="background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+              <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Pay with any UPI App:</p>
+              <div style="display: flex; gap: 10px; margin-bottom: 12px; font-size: 12px; font-weight: 700;">
+                <span style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 4px;">Google Pay</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 4px;">PhonePe</span>
+                <span style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 4px;">Paytm</span>
+              </div>
+              <input type="text" class="form-input" placeholder="Enter your UPI ID (e.g. mobile@upi)" value="user@okhdfcbank">
+            </div>
+
+            <div id="payPanel_Card" class="payment-method-panel" style="display: none; background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+              <div class="form-group">
+                <label>Card Number</label>
+                <input type="text" class="form-input" placeholder="4532 •••• •••• 8892" value="4532 9840 2841 8892">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label>Expiry (MM/YY)</label>
+                  <input type="text" class="form-input" placeholder="12/28" value="10/28">
+                </div>
+                <div class="form-group">
+                  <label>CVV</label>
+                  <input type="password" class="form-input" placeholder="•••" maxlength="3" value="821">
+                </div>
+              </div>
+            </div>
+
+            <div id="payPanel_NetBanking" class="payment-method-panel" style="display: none; background: var(--bg-card); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">
+              <label style="display:block; font-size: 12px; margin-bottom: 6px; color: var(--text-secondary);">Choose your Bank</label>
+              <select class="form-input">
+                <option>HDFC Bank</option>
+                <option>ICICI Bank</option>
+                <option>State Bank of India (SBI)</option>
+                <option>Axis Bank</option>
+                <option>Kotak Mahindra Bank</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnPaySubmit" style="width: 100%; justify-content: center; padding: 14px; font-size: 16px;">
+              Pay Now
+            </button>
+            <p style="text-align: center; font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+              🔒 256-Bit SSL Encryption • Instant Ticket Delivery via SMS & Email
+            </p>
+          </form>
+        </div>
+
+        <!-- Summary Side -->
+        <div>
+          <div class="order-summary-box">
+            <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 6px;" id="checkoutMovieTitle">Movie Title</h4>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 14px;" id="checkoutVenueMeta"></p>
+
+            <div class="summary-row">
+              <span id="checkoutSeatsList">Seats (0 Tickets)</span>
+              <span id="checkoutTicketsPrice">₹0</span>
+            </div>
+
+            <div class="summary-row" id="checkoutSnacksRow" style="display: none;">
+              <span>Food & Beverages</span>
+              <span id="checkoutSnacksPrice">₹0</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Convenience Fee</span>
+              <span id="checkoutFee">₹0</span>
+            </div>
+
+            <div class="summary-row">
+              <span>Integrated GST (18%)</span>
+              <span id="checkoutGst">₹0</span>
+            </div>
+
+            <div class="summary-row total-row">
+              <span>Grand Total</span>
+              <span id="checkoutGrandTotal">₹0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 5: Confirmed Digital E-Ticket with QR Code
+       ======================================================================== -->
+  <div class="modal-overlay" id="ticketModal">
+    <div class="modal-box" style="max-width: 540px; background: transparent; box-shadow: none;">
+      <button class="modal-close-btn" data-close-modal style="background: rgba(0,0,0,0.6);">&times;</button>
+      
+      <div class="ticket-wrapper">
+        <div class="confetti-badge">
+          <span>🎉</span> Booking Confirmed!
+        </div>
+
+        <!-- Boarding Pass / Cinema E-Ticket -->
+        <div class="e-ticket" id="eTicketElement">
+          <!-- Ticket Header -->
+          <div class="ticket-header-bg">
+            <img class="ticket-poster-img" id="ticketPosterImg" src="" alt="Poster">
+            <div class="ticket-header-info">
+              <h4 id="ticketMovieTitle">Event Title</h4>
+              <p id="ticketMovieFormat">Format & Language</p>
+              <p style="margin-top: 6px; font-weight: 700; font-size: 11px; background: rgba(0,0,0,0.25); display: inline-block; padding: 2px 8px; border-radius: 4px;">
+                M-TICKET • <span id="ticketBookingId">BMS-000000</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Perforated Notch Divider -->
+          <div class="ticket-divider">
+            <div class="ticket-dash"></div>
+          </div>
+
+          <!-- Ticket Details -->
+          <div class="ticket-body">
+            <div class="ticket-grid-details">
+              <div class="ticket-field">
+                <label>Date</label>
+                <span id="ticketShowDate">2026-11-18</span>
+              </div>
+              <div class="ticket-field">
+                <label>Time</label>
+                <span id="ticketShowTime">07:00 PM</span>
+              </div>
+              <div class="ticket-field" style="grid-column: 1 / -1;">
+                <label>Cinema / Venue</label>
+                <span id="ticketVenueName">PVR INOX</span>
+              </div>
+              <div class="ticket-field">
+                <label>Seats Booked</label>
+                <span id="ticketSeatsList" style="color: var(--accent-primary);">A4, A5</span>
+              </div>
+              <div class="ticket-field">
+                <label>Total Paid</label>
+                <span id="ticketTotalAmount">₹1,200</span>
+              </div>
+              <div class="ticket-field" style="grid-column: 1 / -1;">
+                <label>Attendee</label>
+                <span id="ticketAttendeeName">Vysakh</span>
+              </div>
+            </div>
+
+            <!-- QR Code Scan Box -->
+            <div class="ticket-qr-area">
+              <div class="ticket-qr-box" id="ticketQrBox">
+                <!-- Real Local SVG QR Code injected here -->
+              </div>
+              <div class="ticket-code-text" id="ticketBarcodeText">BMS-849204</div>
+              <span style="font-size: 11px; color: #6b7280; margin-top: 2px;">Scan at the theater turnstile for entry</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ticket Actions -->
+        <div class="ticket-actions-bar">
+          <button class="btn-primary" style="flex: 1;" onclick="printTicket()">
+            🖨️ Print / Save PDF
+          </button>
+          <button class="btn-secondary" style="flex: 1;" data-close-modal>
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 6: My Bookings Panel
+       ======================================================================== -->
+  <div class="modal-overlay" id="myBookingsModal">
+    <div class="modal-box" style="max-width: 750px;">
+      <button class="modal-close-btn" data-close-modal>&times;</button>
+      <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-color);">
+        <h3 style="font-size: 20px; font-weight: 800;">My Bookings & Tickets</h3>
+      </div>
+
+      <div class="my-bookings-list" id="myBookingsContainer">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 7: Admin Panel (+ Add Event)
+       ======================================================================== -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-box" style="max-width: 720px;">
+      <button class="modal-close-btn" data-close-modal>&times;</button>
+      <div style="padding: 20px 24px; border-bottom: 1px solid var(--border-color);">
+        <h3 style="font-size: 20px; font-weight: 800;">Organizer Hub: Add New Event</h3>
+        <p style="font-size: 12px; color: var(--text-secondary);">Published events and show schedules will be stored locally in SQLite immediately.</p>
+      </div>
+
+      <form id="addEventForm" style="padding: 24px;">
+        <div class="form-group">
+          <label>Event Title *</label>
+          <input type="text" class="form-input" id="adminTitle" placeholder="e.g. Avatar: Fire and Ash" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>Category *</label>
+            <select class="form-input" id="adminCategory">
+              <option value="Movies">Movies</option>
+              <option value="Concerts">Music Concerts</option>
+              <option value="Comedy">Standup Comedy</option>
+              <option value="Sports">Live Sports</option>
+              <option value="Plays">Plays & Theater</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Languages</label>
+            <input type="text" class="form-input" id="adminLanguage" placeholder="e.g. English, Hindi, Tamil" value="English, Hindi">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>Genre</label>
+            <input type="text" class="form-input" id="adminGenre" placeholder="e.g. Action, Sci-Fi" value="Action, Thriller">
+          </div>
+          <div class="form-group">
+            <label>Duration</label>
+            <input type="text" class="form-input" id="adminDuration" placeholder="e.g. 2h 45m" value="2h 30m">
+          </div>
+          <div class="form-group">
+            <label>Rating (out of 10)</label>
+            <input type="number" step="0.1" class="form-input" id="adminRating" placeholder="9.2" value="9.0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Poster Image URL</label>
+          <input type="url" class="form-input" id="adminPosterUrl" placeholder="https://images.unsplash.com/..." value="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80">
+        </div>
+
+        <div class="form-group">
+          <label>Event Description</label>
+          <textarea class="form-input" id="adminDesc" rows="3" placeholder="Enter brief synopsis..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Cast / Artists</label>
+          <input type="text" class="form-input" id="adminCast" placeholder="Starring actors or performers...">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label>VIP Seat Price (₹)</label>
+            <input type="number" class="form-input" id="adminVipPrice" value="650">
+          </div>
+          <div class="form-group">
+            <label>Platinum Price (₹)</label>
+            <input type="number" class="form-input" id="adminPlatPrice" value="350">
+          </div>
+          <div class="form-group">
+            <label>Gold Price (₹)</label>
+            <input type="number" class="form-input" id="adminGoldPrice" value="200">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;">
+          Save & Publish Event
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="/js/qrcode.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

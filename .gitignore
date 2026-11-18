@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite Database (auto-generated on startup by database.py)
+# Uncomment the line below if you prefer to generate it fresh on each container start:
+# bookmyshow.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment and IDE
+.env
+.venv
+env/
+venv/
+.vscode/
+.idea/
+*.log
